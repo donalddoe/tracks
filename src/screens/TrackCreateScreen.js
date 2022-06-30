@@ -23,7 +23,7 @@ const TrackCreateScreen = ({ isFocused }) => {
     <SafeAreaView style={styles.container}>
       <Text h2>Create a Track</Text>
       <Map />
-      {errorMsg ? <Text style={styles.paragraph}>{errorMsg}</Text> : null}
+      {errorMsg ? <Text>{errorMsg}</Text> : null}
       <TrackForm  />
     </SafeAreaView>
   )
