@@ -4,9 +4,12 @@ import * as Location from 'expo-location';
 
 export default ( shouldTrack, callback) => {
   const [errorMsg, setErrorMsg] = useState(null);
-  const [subscriber, setSubscriber] = useState(null);
 
-  const startWatching = async () => {
+
+  useEffect(() => {
+    let subscriber;
+
+    const startWatching = async () => {
     try {
       let { status } = await Location.requestBackgroundPermissionsAsync();
 
@@ -15,27 +18,33 @@ export default ( shouldTrack, callback) => {
         return;
       }
 
-      const sub = await Location.watchPositionAsync({
+      subscriber = await Location.watchPositionAsync({
         accuracy: Location.Accuracy.BestForNavigation,
         timeInterval: 1000,
         distanceInterval: 10
       },
         callback
       );
-      setSubscriber(sub)
     } catch (e) {
       setErrorMsg(e);
     }
   }
 
-  useEffect(() => {
     if (shouldTrack) {
       startWatching();
     } else {
+      if (subscriber) {
       subscriber.remove();
-      setSubscriber(null);
+      }
+      subscriber = null;
     }
-  }, [shouldTrack]);
+
+    return () => {
+      if (subscriber) {
+        subscriber.remove();
+      }
+    }
+  }, [shouldTrack, callback]);
 
   return [errorMsg]
 
