@@ -1,4 +1,4 @@
-import '../_mockLocation';
+// import '../_mockLocation';
 import React, {  useContext, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native-elements';
@@ -24,7 +24,7 @@ const TrackCreateScreen = ({ isFocused }) => {
       <Text h2>Create a Track</Text>
       <Map />
       {errorMsg ? <Text style={styles.paragraph}>{errorMsg}</Text> : null}
-      <TrackForm />
+      <TrackForm  />
     </SafeAreaView>
   )
 }

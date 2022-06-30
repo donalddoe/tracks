@@ -1,4 +1,5 @@
 import createDataContext from './createDataContext';
+import { navigate } from '../navigationRef';
 
 const locationReducer = (state, action) => {
   switch (action.type) {
@@ -10,14 +11,16 @@ const locationReducer = (state, action) => {
       return { ...state, recording: false };
     case 'add_location':
       return { ...state, locations: [...state.locations, action.payload] }
-    case 'changeName':
-      return { ...state,  name: action.payload }
+    case 'change_name':
+      return { ...state, name: action.payload };
+    case 'reset':
+      return { ...state, name: '', locations: [] };
     default:
       return state;
   }
 }
 
-const changeName = dispatch => name => {
+const changeName = dispatch => (name) => {
   dispatch({ type: 'change_name', payload: name })
 }
 
@@ -32,10 +35,14 @@ const addLocation = dispatch => (location, recording) => {
   if (recording) {
     dispatch({ type: 'add_location', payload: location })
   }
- }
+}
+ 
+const reset = dispatch => () => {
+  dispatch({ type: 'reset' });
+}
 
 export const { Context, Provider } = createDataContext(
   locationReducer,
-  { startRecording, stopRecording, addLocation, changeName },
+  { startRecording, stopRecording, addLocation, changeName, reset },
   { name: '', recording: false, locations: [], currentLocation: null }
 )
