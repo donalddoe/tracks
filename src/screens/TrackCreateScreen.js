@@ -1,71 +1,30 @@
-// import '../_mockLocation'
-import React, { useEffect, useState } from 'react';
+import '../_mockLocation'
+import React, {  useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { Button, Text } from 'react-native-elements';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import * as Location from 'expo-location';
+import { Text } from 'react-native-elements';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import useLocation from '../hooks/useLocation';
 import Map from '../components/Map';
+import { Context as LocationContext } from '../context/LocationContext';
+import { withNavigationFocus } from 'react-navigation'
+import { useFocusEffect } from '@react-navigation/native';
+import TrackForm from '../components/TrackForm';
 
-const TrackCreateScreen = () => {
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+const TrackCreateScreen = ({ isFocused }) => {
+  const { addLocation, state } = useContext(LocationContext)
+  const [errorMsg] = useLocation(isFocused, (location) => {
+    addLocation(location, state.recording)
+  })
 
-
-  const startWatching = async () => {
-    try {
-      let { status } = await Location.requestBackgroundPermissionsAsync();
-
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied, Please Enable location services');
-        return;
-      }
-
-      await Location.watchPositionAsync({
-        accuracy: Location.Accuracy.BestForNavigation,
-        timeInterval: 1000,
-        distanceInterval: 10
-      }, (location) => {
-        console.log(location);
-      })
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    } catch (e) {
-      setErrorMsg(e);
-    }
-  }
-
-  useEffect(() => {
-    startWatching();
-  }, []);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     let { status } = await Location.requestBackgroundPermissionsAsync();
-  //     if (status !== 'granted') {
-  //       setErrorMsg('Permission to access location was denied');
-  //       return;
-  //     }
-
-  //     let location = await Location.getCurrentPositionAsync({});
-  //     setLocation(location);
-  //   })();
-  // }, []);
-
-  let text = 'Waiting..'; 
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
-
+  
 
 
   return (
     <SafeAreaView style={styles.container}>
       <Text h2>Create a Track</Text>
       <Map />
-      {errorMsg ? <Text style={styles.paragraph}>{ errorMsg }</Text>: null}
+      {errorMsg ? <Text style={styles.paragraph}>{errorMsg}</Text> : null}
+      <TrackForm />
     </SafeAreaView>
   )
 }
@@ -76,4 +35,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TrackCreateScreen;
+export default withNavigationFocus(TrackCreateScreen);

@@ -12,8 +12,10 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.7",
     "@react-navigation/bottom-tabs": "^6.3.1",
-    "@react-navigation/native": "^6.0.10",
+    "@react-navigation/compat": "^5.3.20",
+    "@react-navigation/native": "^6.x",
     "@react-navigation/native-stack": "^6.6.2",
+    "@react-navigation/stack": "^6.x",
     "axios": "^0.27.2",
     "expo": "~45.0.0",
     "expo-location": "~14.2.2",
