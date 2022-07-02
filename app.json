@@ -28,6 +28,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "This app helps keep record of journey, for instance you go out for hiking. you can trace your steps and the route you used."
   }
 }
